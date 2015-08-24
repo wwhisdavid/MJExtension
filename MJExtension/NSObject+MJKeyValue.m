@@ -93,22 +93,44 @@ static NSNumberFormatter *_numberFormatter;
                 for (MJPropertyKey *propertyKey in propertyKeys) {
                     value = [propertyKey valueInObject:value];
                 }
-                if (value) break;
+                if (value){
+                    if ([self isValueNSString:value]) {
+                        NSString *str = (NSString *)value;
+                        if (str.length == 0) {
+                            value = [NSNull null];
+                        }
+                    }
+                    break;
+                }
+                else {
+                    value = [NSNull null];
+                    break;
+                }
             }
             
             // 值的过滤
             id newValue = [aClass getNewValueFromObject:self oldValue:value property:property];
+
             if (newValue) value = newValue;
             
             // 如果没有值，就直接返回
-            if (!value || value == [NSNull null]) return;
-            
+            if (value != [NSNull null]){
+//            else{
+//            if (value == [NSNull null]);
+//            if (!value) return;//修改，如果原来没有值或字典没有对应字段，自动转为NSNull
+
             // 2.如果是模型属性
             MJPropertyType *type = property.type;
             Class typeClass = type.typeClass;
             Class objectClass = [property objectClassInArrayForClass:[self class]];
             if (!type.isFromFoundation && typeClass) {
                 value = [typeClass objectWithKeyValues:value context:context error:error];
+                if ([self isValueNSString:value]) {
+                    NSString *str = (NSString *)value;
+                    if (value == nil || str.length == 0) {
+                        value = [NSNull null];
+                    }
+                }
             } else if (objectClass) {
                 // string array -> url array
                 if (objectClass == [NSURL class] && [value isKindOfClass:[NSArray class]]) {
@@ -126,10 +148,11 @@ static NSNumberFormatter *_numberFormatter;
                 if ([value isKindOfClass:[NSNumber class]]) {
                     // NSNumber -> NSString
                     value = [value description];
+
                 } else if ([value isKindOfClass:[NSURL class]]) {
                     // NSURL -> NSString
                     value = [value absoluteString];
-                }
+                } 
             } else if ([value isKindOfClass:[NSString class]]) {
                 if (typeClass == [NSURL class]) {
                     // NSString -> NSURL
@@ -154,7 +177,8 @@ static NSNumberFormatter *_numberFormatter;
                     }
                 }
             }
-            
+
+            }
             // 4.赋值
             [property setValue:value forObject:self];
         }];
@@ -497,5 +521,45 @@ static NSNumberFormatter *_numberFormatter;
     }
     
     return [[NSString alloc] initWithData:[self JSONData] encoding:NSUTF8StringEncoding];
+}
+
+#pragma mark - wwh
+//- (void)keyValuesDidFinishConvertingToObject
+//{
+//    Class aClass = [self class];
+//    NSArray *allowedPropertyNames = [aClass totalAllowedPropertyNames];
+//    NSArray *ignoredPropertyNames = [aClass totalIgnoredPropertyNames];
+//
+//    //通过封装的方法回调一个通过运行时编写的，用于返回属性列表的方法。
+//    [aClass enumerateProperties:^(MJProperty *property, BOOL *stop) {
+//        // 0.检测是否被忽略
+//        if (allowedPropertyNames.count && ![allowedPropertyNames containsObject:property.name]) return;
+//        if ([ignoredPropertyNames containsObject:property.name]) return;
+//
+//        // 1.取出属性值
+//        id value;
+//        NSArray *propertyKeyses = [property propertyKeysForClass:aClass];
+//        for (NSArray *propertyKeys in propertyKeyses) {
+//            for (MJPropertyKey *propertyKey in propertyKeys) {
+//                value = [propertyKey valueInObject:value];
+//            }
+//            if (value) break;
+//            else {
+//                value = [NSNull null];
+//                break;
+//            }
+//        }
+//    }];
+//
+//}
+
+- (BOOL)isValueNSString:(id)value{
+    return [value isKindOfClass:[NSString class]];
+}
+- (BOOL)isValueNSURL:(id)value{
+    return [value isKindOfClass:[NSURL class]];
+}
+- (BOOL)isValueNSNumber:(id)value{
+    return [value isKindOfClass:[NSNumber class]];
 }
 @end

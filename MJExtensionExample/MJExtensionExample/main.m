@@ -39,17 +39,17 @@ int main(int argc, const char * argv[])
         // 或者参考每个模型的.m文件中被注释掉的配置
         
         execute(keyValues2object, @"简单的字典 -> 模型");
-        execute(keyValues2object1, @"JSON字符串 -> 模型");
-        execute(keyValues2object2, @"复杂的字典 -> 模型 (模型里面包含了模型)");
-        execute(keyValues2object3, @"复杂的字典 -> 模型 (模型的数组属性里面又装着模型)");
-        execute(keyValues2object4, @"简单的字典 -> 模型（key替换，比如ID和id，支持多级映射）");
-        execute(keyValuesArray2objectArray, @"字典数组 -> 模型数组");
-        execute(object2keyValues, @"模型转字典");
-        execute(objectArray2keyValuesArray, @"模型数组 -> 字典数组");
-        execute(coreData, @"CoreData示例");
-        execute(coding, @"NSCoding示例");
-        execute(replacedKeyFromPropertyName121, @"统一转换属性名（比如驼峰转下划线）");
-        execute(newValueFromOldValue, @"过滤字典的值（比如字符串日期处理为NSDate、字符串nil处理为@""）");
+//        execute(keyValues2object1, @"JSON字符串 -> 模型");
+//        execute(keyValues2object2, @"复杂的字典 -> 模型 (模型里面包含了模型)");
+//        execute(keyValues2object3, @"复杂的字典 -> 模型 (模型的数组属性里面又装着模型)");
+//        execute(keyValues2object4, @"简单的字典 -> 模型（key替换，比如ID和id，支持多级映射）");
+//        execute(keyValuesArray2objectArray, @"字典数组 -> 模型数组");
+//        execute(object2keyValues, @"模型转字典");
+//        execute(objectArray2keyValuesArray, @"模型数组 -> 字典数组");
+//        execute(coreData, @"CoreData示例");
+//        execute(coding, @"NSCoding示例");
+//        execute(replacedKeyFromPropertyName121, @"统一转换属性名（比如驼峰转下划线）");
+//        execute(newValueFromOldValue, @"过滤字典的值（比如字符串日期处理为NSDate、字符串nil处理为@""）");
         execute(logAllProperties, @"使用NSLog打印模型的所有属性");
     }
     return 0;
@@ -62,7 +62,7 @@ void keyValues2object()
 {
     // 1.定义一个字典
     NSDictionary *dict = @{
-                           @"name" : @"Jack",
+//                           @"name" : @"Jack",
                            @"icon" : @"lufy.png",
                            @"age" : @"20",
                            @"height" : @1.55,
